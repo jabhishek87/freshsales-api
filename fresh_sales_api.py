@@ -148,15 +148,22 @@ class FreshSalesApiBase(object):
         return self.post_uri(uri, params)
     
 
-    def get_all_leads(self):
+    def get_all(self, key):
         """function to return all leads
         
         :return: list of all leads
-        :rtype: dict
+        :rtype: list
         """
 
-        uri = self.base_url + "leads/filter/"
-        import pdb; pdb.set_trace()
-        return self.get_uri(uri)
-
-
+        uri = self.base_url + "{}/filters/".format(key)
+        data =  self.get_uri(uri)
+        view = {}
+        for i in data['filters']:
+            if i['name'] == 'All {}'.format(key.title()):
+                view = i
+                break;
+        if view:
+            data = self.get_uri(
+                self.base_url + '{}/view/{}'.format(key, view['id'])
+            )
+        return data

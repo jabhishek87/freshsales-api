@@ -16,7 +16,6 @@ class CsFsintegration(FreshSalesApiBase):
         """
         self.base_url = settings.BASE_URI
         self.api_key = settings.api_key
-        self.view_id = settings.view_id
         
         # call super init
         super(CsFsintegration, self).__init__(self.base_url, self.api_key)
@@ -131,16 +130,29 @@ def addnote(ctx, email, note):
 
 @click.command()
 @click.pass_context
-@click.option('--email', required=True)
-def listlead(ctx, email):
+def listlead(ctx):
     csfs = CsFsintegration()
-    data = csfs.get_all_leads()
-    import pdb; pdb.set_trace()
+    key = 'leads'
+    data = csfs.get_all(key)
+    click.echo('{email:<50} | {last_name:<20}'.format(**{'email':'Email', 'last_name':'Lastname'}))
+    for records in data[key]:
+        click.echo('{email:<50} | {last_name:<20}'.format(**records))
+
+@click.command()
+@click.pass_context
+def listcontacts(ctx):
+    csfs = CsFsintegration()
+    key = 'contacts'
+    data = csfs.get_all(key)
+    click.echo('{email:<50} | {last_name:<20}'.format(**{'email':'Email', 'last_name':'Lastname'}))
+    for records in data[key]:
+        click.echo('{email:<50} | {last_name:<20}'.format(**records))
 
 cli.add_command(addlead)
 cli.add_command(addnote)
 
 cli.add_command(listlead)
+cli.add_command(listcontacts)
 
 
 if __name__ == '__main__':

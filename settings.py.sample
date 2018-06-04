@@ -4,6 +4,3 @@ BASE_URI = "https://testfrshslscrm.freshsales.io/api/"
 
 # your api key
 api_key = "<your-api-key>"
-
-# your view id
-view_id = "<main-view-id>"
