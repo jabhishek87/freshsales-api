@@ -21,12 +21,11 @@ class CsFsintegration(FreshSalesApiBase):
         super(CsFsintegration, self).__init__(self.base_url, self.api_key)
     
 
-    def get_or_create_lead(self, email):
+    def get_or_create_contact(self, email):
         """ Function to perform Operation on leads
-        1) if leads not exists Create leads
-        2) if leads exists again check if contacts exists
-        3) if contacts not exists convert to contacts
-        4) if contacts exists do nothing
+        1) if contact exist => do nothing
+        2) if lead exist => convert to contact
+        4) if not found => create contact
         
         Arguments:
             email {[type]} -- [description]
@@ -49,11 +48,11 @@ class CsFsintegration(FreshSalesApiBase):
                 search_response["leads"]["leads"][0]
             )
         else:
-            print("creating new lead")
-            params = {"lead":{
+            print("creating new contact")
+            params = {"contact":{
                 "email": email, "last_name":"unknown"
             }}
-            ret_data = self.create_lead(params)
+            ret_data = self.create_contact(params)
         
         return ret_data
     
@@ -104,9 +103,9 @@ def cli(ctx):
 @click.command()
 @click.pass_context
 @click.option('--email', required=True)
-def addlead(ctx, email):
+def addcontact(ctx, email):
     csfs = CsFsintegration()
-    data = csfs.get_or_create_lead(email)
+    data = csfs.get_or_create_contact(email)
     if data.get('lead'):
         click.echo('New lead Created')
         click.echo(json.dumps(data, indent=2))
@@ -148,7 +147,7 @@ def listcontacts(ctx):
     for records in data[key]:
         click.echo('{email:<50} | {last_name:<20}'.format(**records))
 
-cli.add_command(addlead)
+cli.add_command(addcontact)
 cli.add_command(addnote)
 
 cli.add_command(listlead)
