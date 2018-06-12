@@ -85,7 +85,7 @@ class CsFsintegration(FreshSalesApiBase):
             
             params = {"note":{
                 "description": note,
-                "targetable_type": 'lead',
+                "targetable_type": 'Lead',
                 "targetable_id": lead['id']
             }}
             ret_data = self.create_note(params)
